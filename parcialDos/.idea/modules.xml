@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Cup/Cup.iml" filepath="$PROJECT_DIR$/Cup/Cup.iml" />
+      <module fileurl="file://$PROJECT_DIR$/JFlex_1/JFlex_1.iml" filepath="$PROJECT_DIR$/JFlex_1/JFlex_1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lenguajeMIke/JFlex_1/JFlex_2.iml" filepath="$PROJECT_DIR$/lenguajeMIke/JFlex_1/JFlex_2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Sintactico_V1_1/Sintactico_V1_1.iml" filepath="$PROJECT_DIR$/Sintactico_V1_1/Sintactico_V1_1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lenguajeMIke/out/out.iml" filepath="$PROJECT_DIR$/lenguajeMIke/out/out.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lenguajeMIke/JFlex_1/out/out2.iml" filepath="$PROJECT_DIR$/lenguajeMIke/JFlex_1/out/out2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/parcialDos.iml" filepath="$PROJECT_DIR$/.idea/parcialDos.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sintactico/sintactico.iml" filepath="$PROJECT_DIR$/sintactico/sintactico.iml" />
+    </modules>
+  </component>
+</project>

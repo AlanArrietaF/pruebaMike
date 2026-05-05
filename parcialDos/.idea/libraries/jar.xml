@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="jar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/sintactico/jar/JFlex.jar!/" />
+      <root url="jar://$PROJECT_DIR$/sintactico/jar/java-cup-11.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
