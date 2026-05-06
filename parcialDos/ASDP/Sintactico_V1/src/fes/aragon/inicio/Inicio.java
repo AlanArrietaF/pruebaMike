@@ -12,6 +12,7 @@ public class Inicio {
     private boolean error = true;
     private Tokens tokens = null;
     private Lexico analizador = null;
+
     public static void main(String[] args) {
         Inicio ap = new Inicio();
         BufferedReader buf;
@@ -21,82 +22,100 @@ public class Inicio {
                             + "/archivo.txt"));
             ap.analizador = new Lexico(buf);
             ap.siguienteToken();
-            ap.A();
+            ap.inicioAnalisis();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-    private void A(){
-        do{
-            B();
-            if(tokens.getLexema()!=Sym.PUNTOCOMA){
-                errorSintactico();
+
+    private void inicioAnalisis() {
+        while (tokens.getLexema() != Sym.EOF) {
+            // Saltamos líneas vacías
+            if (tokens.getLexema() == Sym.SALTOLINEA) {
                 siguienteToken();
+                continue;
             }
+
+            E(); // Llamada a la regla inicial de la gramática
+
+            // Verificamos el fin de instrucción (Punto y Coma)
+            if (tokens.getLexema() != Sym.PUNTOCOMA) {
+                errorSintactico();
+            }
+
             if (!this.error) {
                 System.out.println("Invalida linea= " + (tokens.getLinea() + 1));
                 this.error = true;
             } else {
                 System.out.println("Valida  linea= " + (tokens.getLinea() + 1));
             }
+
             siguienteToken();
-        }while(tokens.getLexema() != Sym.EOF);
+        }
     }
-    private void B(){
-        if(tokens.getLexema()==Sym.ID){
+
+    // E ::= T or E | T
+    private void E() {
+        T();
+        if (tokens.getLexema() == Sym.OR) {
             siguienteToken();
-            if(tokens.getLexema()==Sym.IGUAL){
+            E();
+        }
+    }
+
+    // T ::= F and T | F
+    private void T() {
+        F();
+        if (tokens.getLexema() == Sym.AND) {
+            siguienteToken();
+            T();
+        }
+    }
+
+    // F ::= not F | true | false | ( E )
+    private void F() {
+        if (tokens.getLexema() == Sym.NOT) {
+            siguienteToken();
+            F();
+        } else if (tokens.getLexema() == Sym.TRUE) {
+            siguienteToken();
+        } else if (tokens.getLexema() == Sym.FALSE) {
+            siguienteToken();
+        } else if (tokens.getLexema() == Sym.PAR_A) {
+            siguienteToken();
+            E();
+            if (tokens.getLexema() == Sym.PAR_C) {
                 siguienteToken();
-                C();
+            } else {
+                this.error = false; // Falta paréntesis de cierre
             }
-            else{
-                this.error=false;
-            }
-        }else{
-            this.error=false;
+        } else {
+            this.error = false; // Token no reconocido por la gramática F
         }
     }
-
-    private void C(){
-        if (tokens.getLexema()==Sym.MAS) {
-            siguienteToken();
-            C();
-        } else if (tokens.getLexema()==Sym.MENOS){
-            siguienteToken();
-            C();
-        }else if (tokens.getLexema()==Sym.ID){
-            siguienteToken();
-        }else if (tokens.getLexema()==Sym.ENTERO){
-            siguienteToken();
-        }else{
-            this.error=false;
-        }
-    }
-
 
     private void siguienteToken() {
         try {
             tokens = analizador.yylex();
             if (tokens == null) {
                 tokens = new Tokens("EOF", Sym.EOF, 0, 0);
-                throw new IOException("Fin Archivo");
+            } else {
+                System.out.println("Token: " + Sym.terminales[tokens.getLexema()] +
+                        " | Lexema: " + tokens.getToken() +
+                        " | L: " + tokens.getLinea() +
+                        " | C: " + tokens.getColumna());
             }
         } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+            tokens = new Tokens("EOF", Sym.EOF, 0, 0);
         }
-
     }
+
     private void errorSintactico() {
         this.error = false;
-        //descartar todo hasta encontrar ;
-        do {
-            System.out.println(tokens.toString());
-            if (tokens.getLexema() != Sym.PUNTOCOMA) {
-                siguienteToken();
-            }
-        } while (tokens.getLexema() != Sym.PUNTOCOMA && tokens.getLexema() != Sym.EOF);
-
+        // Recuperación: consumir hasta el delimitador o fin de archivo
+        while (tokens.getLexema() != Sym.PUNTOCOMA && tokens.getLexema() != Sym.EOF) {
+            siguienteToken();
+        }
     }
 }
