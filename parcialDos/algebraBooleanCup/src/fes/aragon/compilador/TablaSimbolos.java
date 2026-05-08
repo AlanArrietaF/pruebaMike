@@ -23,7 +23,7 @@ public class TablaSimbolos {
         return (Datos)(t.get(nombre));
 	}
 	public void imprimir() {
-		System.out.println("Valores de la table de simbolos");
+		System.out.println("Valores de la tabla de simbolos");
 		Iterator<Datos> it=t.values().iterator();
 		while(it.hasNext()) {
 			Datos s=(Datos)it.next();

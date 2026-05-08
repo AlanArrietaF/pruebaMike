@@ -13,5 +13,6 @@
     <orderEntry type="library" name="jar2" level="project" />
     <orderEntry type="library" name="jflex-full-1.7.0" level="project" />
     <orderEntry type="library" name="jar" level="project" />
+    <orderEntry type="library" name="java-cup-11" level="project" />
   </component>
 </module>
