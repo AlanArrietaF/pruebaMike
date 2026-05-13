@@ -2,10 +2,15 @@ package fes.aragon.compilador;
 
 import java_cup.runtime.*;
 import java.io.*;
+import java.util.ArrayList;
+import fes.aragon.tablerointerprete.modelo.Comando; // Asegúrate de que esta ruta coincida con donde creaste la clase Comando
 
 // Código que se añade a la clase parser generada
 parser code {:
     public Lexer lex;
+
+    // ¡Aquí está nuestra lista para el Camino B!
+    public ArrayList<Comando> listaComandos = new ArrayList<>();
 
     // Constructor opcional para pasar el lexer fácilmente
     public parser(Lexer lex) {
@@ -27,61 +32,51 @@ parser code {:
     }
 :};
 
-/* * Terminales:
- * Deben coincidir exactamente con los tokens que retorna tu archivo Lexer.flex
- */
+/* Terminales */
 terminal INICIO, DERECHA, IZQUIERDA, ABAJO, ARRIBA, MOVER, REPITE, PARAR;
-
-/* * Terminales con valor:
- * NUMERO trae un Integer asociado desde el Lexer (gracias a Integer.parseInt)
- */
 terminal Integer NUMERO;
 
-/* * No terminales:
- * Las estructuras de nuestro lenguaje
- */
+/* No terminales */
 non terminal programa, lista_instrucciones, instruccion;
 
-/* El símbolo inicial de la gramática */
 start with programa;
 
 /* --- Gramática --- */
 
-// Un programa es básicamente una lista de instrucciones
 programa ::= lista_instrucciones;
 
-// Una lista de instrucciones puede ser una sola instrucción, o una lista seguida de otra instrucción (recursividad)
 lista_instrucciones ::= lista_instrucciones instruccion
                       | instruccion;
 
-// Definición de las reglas para cada comando del juego
+// En lugar de System.out.println, ahora agregamos objetos a la lista
 instruccion ::= INICIO NUMERO:x NUMERO:y
     {:
-        System.out.println("Comando detectado: Posicionar nave en X:" + x + ", Y:" + y);
+        parser.listaComandos.add(new Comando("inicioX", x));
+        parser.listaComandos.add(new Comando("inicioY", y));
     :}
     | DERECHA
     {:
-        System.out.println("Comando detectado: Apuntar/Mover a la derecha");
+        parser.listaComandos.add(new Comando("derecha"));
     :}
     | IZQUIERDA
     {:
-        System.out.println("Comando detectado: Apuntar/Mover a la izquierda");
+        parser.listaComandos.add(new Comando("izquierda"));
     :}
     | ABAJO
     {:
-        System.out.println("Comando detectado: Apuntar/Mover hacia abajo");
+        parser.listaComandos.add(new Comando("abajo"));
     :}
     | ARRIBA
     {:
-        System.out.println("Comando detectado: Apuntar/Mover hacia arriba");
+        parser.listaComandos.add(new Comando("arriba"));
     :}
     | MOVER NUMERO:n
     {:
-        System.out.println("Comando detectado: Avanzar " + n + " casillas");
+        parser.listaComandos.add(new Comando("mover", n));
     :}
     | REPITE NUMERO:n lista_instrucciones PARAR
     {:
-        System.out.println("Comando detectado: Finaliza bloque de repetición (" + n + " veces)");
+        parser.listaComandos.add(new Comando("repite", n));
     :}
     | error
     {:
