@@ -1,0 +1,7 @@
+inicio 0 3
+mover 5
+derecha
+repite 3
+    mover 2
+    abajo
+parar
