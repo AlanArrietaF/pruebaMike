@@ -42,42 +42,62 @@ start with programa;
 
 /* --- Gramática --- */
 
-programa ::= lista_instrucciones;
+programa ::= lista_instrucciones:li
+    {:
+        // Le indicamos explícitamente a Java que 'li' es un ArrayList
+        parser.listaComandos = (ArrayList<Comando>) li;
+        RESULT = li;
+    :};
 
-lista_instrucciones ::= lista_instrucciones instruccion
-                      | instruccion;
+lista_instrucciones ::= lista_instrucciones:li instruccion:i
+    {:
+        // Hacemos el cast antes de usar addAll
+        ((ArrayList<Comando>) li).addAll((ArrayList<Comando>) i);
+        RESULT = li;
+    :}
+    | instruccion:i
+    {:
+        RESULT = i;
+    :};
 
-// En lugar de System.out.println, ahora agregamos objetos a la lista
 instruccion ::= INICIO NUMERO:x NUMERO:y
     {:
-        parser.listaComandos.add(new Comando("inicioX", x));
-        parser.listaComandos.add(new Comando("inicioY", y));
+        ArrayList<Comando> l = new ArrayList<>();
+        l.add(new Comando("inicioX", x));
+        l.add(new Comando("inicioY", y));
+        RESULT = l;
     :}
     | DERECHA
     {:
-        parser.listaComandos.add(new Comando("derecha"));
+        ArrayList<Comando> l = new ArrayList<>(); l.add(new Comando("derecha")); RESULT = l;
     :}
     | IZQUIERDA
     {:
-        parser.listaComandos.add(new Comando("izquierda"));
+        ArrayList<Comando> l = new ArrayList<>(); l.add(new Comando("izquierda")); RESULT = l;
     :}
     | ABAJO
     {:
-        parser.listaComandos.add(new Comando("abajo"));
+        ArrayList<Comando> l = new ArrayList<>(); l.add(new Comando("abajo")); RESULT = l;
     :}
     | ARRIBA
     {:
-        parser.listaComandos.add(new Comando("arriba"));
+        ArrayList<Comando> l = new ArrayList<>(); l.add(new Comando("arriba")); RESULT = l;
     :}
     | MOVER NUMERO:n
     {:
-        parser.listaComandos.add(new Comando("mover", n));
+        ArrayList<Comando> l = new ArrayList<>(); l.add(new Comando("mover", n)); RESULT = l;
     :}
-    | REPITE NUMERO:n lista_instrucciones PARAR
+    | REPITE NUMERO:n lista_instrucciones:li PARAR
     {:
-        parser.listaComandos.add(new Comando("repite", n));
+        ArrayList<Comando> l = new ArrayList<>();
+        // ¡LA MAGIA DEL COMPILADOR! Multiplicamos el bloque interno 'n' veces
+        for(int i = 0; i < n; i++){
+            // Agregamos el (ArrayList<Comando>) justo antes de li
+            l.addAll((ArrayList<Comando>) li);
+        }
+        RESULT = l;
     :}
     | error
     {:
-        System.out.println("Recuperando analizador después de un error en la instrucción...");
+        RESULT = new ArrayList<>();
     :};
