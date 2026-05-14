@@ -20,9 +20,8 @@ parser code {:
 
     // Método para manejar errores sintácticos
     public void syntax_error(Symbol st) {
-        System.out.println("Error sintáctico: Componente <" + st.value + "> no esperado. " +
-                           "Línea " + (lex.getYyline() + 1) +
-                           ", Columna " + (lex.getYycolumn() + 1));
+        throw new RuntimeException("Error sintáctico: Componente <" + st.value + "> no esperado. Línea " +
+        (lex.getYyline() + 1) + ", Columna " + (lex.getYycolumn() + 1));
     }
 
     // Método para errores irrecuperables

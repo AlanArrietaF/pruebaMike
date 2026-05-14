@@ -56,6 +56,5 @@ SALTO   = \n|\r|\r\n
 
 /* Error Léxico */
 . {
-    System.out.println("Error léxico: <" + yytext() + "> en línea " + (yyline+1) + ", columna " + (yycolumn+1));
-    // Más adelante, en lugar de System.out, concatenaremos este mensaje en tu JTextArea de errores
+    throw new RuntimeException("Error léxico: Caracter no reconocido <" + yytext() + "> en línea " + (yyline+1) + ", columna " + (yycolumn+1));
 }
